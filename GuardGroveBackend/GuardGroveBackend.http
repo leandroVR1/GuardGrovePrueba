@@ -1,0 +1,6 @@
+@GuardGroveBackend_HostAddress = http://localhost:5293
+
+GET {{GuardGroveBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
