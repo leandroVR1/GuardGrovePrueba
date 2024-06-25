@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/riwip5-028/Documents/leo/GuardGrove/GuardGroveBackend/GuardGroveBackend.csproj": {}
+    "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj": {}
   },
   "projects": {
-    "/home/riwip5-028/Documents/leo/GuardGrove/GuardGroveBackend/GuardGroveBackend.csproj": {
+    "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/riwip5-028/Documents/leo/GuardGrove/GuardGroveBackend/GuardGroveBackend.csproj",
+        "projectUniqueName": "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj",
         "projectName": "GuardGroveBackend",
-        "projectPath": "/home/riwip5-028/Documents/leo/GuardGrove/GuardGroveBackend/GuardGroveBackend.csproj",
-        "packagesPath": "/home/riwip5-028/.nuget/packages/",
-        "outputPath": "/home/riwip5-028/Documents/leo/GuardGrove/GuardGroveBackend/obj/",
+        "projectPath": "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj",
+        "packagesPath": "/home/riwip5-027/.nuget/packages/",
+        "outputPath": "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/riwip5-028/.nuget/NuGet/NuGet.Config"
+          "/home/riwip5-027/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
