@@ -8,7 +8,7 @@ namespace GuardGroveBackend
         public int FolderId { get; set; }
 
         // Navigation properties
-        public Folder Folder { get; set; }
+     //   public Folder Folder { get; set; }
     }
 
 
