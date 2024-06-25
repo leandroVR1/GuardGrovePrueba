@@ -1,29 +1,33 @@
-namespace GuardGroveBackend{
-    [ApiController]
-[Route("api/[controller]")]
-public class FoldersController : ControllerBase
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using GuardGroveBackend.Repositories;
+
+namespace GuardGroveBackend.Controllers
 {
-    private readonly IRepository _repository;
-
-    public FoldersController(IRepository repository)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FoldersController : ControllerBase
     {
-        _repository = repository;
-    }
+        private readonly IFolderRepository _folderRepository;
 
-    [HttpGet]
-    public async Task<IActionResult> GetFoldersAndFiles()
-    {
-        var folders = await _repository.GetAllFoldersAsync();
-        var files = await _repository.GetAllFilesAsync();
-
-        var result = new
+        public FoldersController(IFolderRepository folderRepository)
         {
-            folders,
-            files
-        };
+            _folderRepository = folderRepository;
+        }
 
-        return Ok(result);
+        [HttpGet]
+        public async Task<IActionResult> GetFoldersAndFiles()
+        {
+            var folders = await _folderRepository.GetAllFoldersAsync();
+            var files = await _folderRepository.GetAllFilesAsync();
+
+            var result = new
+            {
+                folders,
+                files
+            };
+
+            return Ok(result);
+        }
     }
-}
-
 }

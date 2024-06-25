@@ -1,7 +1,7 @@
-
-
 using Microsoft.EntityFrameworkCore;
 using GuardGroveBackend.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 namespace GuardGroveBackend.Data
 {
     public class BaseContext : DbContext
@@ -10,7 +10,7 @@ namespace GuardGroveBackend.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Folder> Folders { get; set; }
-        public DbSet<UserFile> UserFiles { get; set; }
+        public DbSet<Models.File> Files { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,33 +20,21 @@ namespace GuardGroveBackend.Data
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Username)
-                .IsUnique();
-
             modelBuilder.Entity<Folder>()
                 .HasOne(f => f.User)
                 .WithMany(u => u.Folders)
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(f => f.UserId);
 
             modelBuilder.Entity<Folder>()
-                .HasOne(f => f.Parent)
-                .WithMany(p => p.Children)
+                .HasOne(f => f.ParentFolder)
+                .WithMany(f => f.ChildFolders)
                 .HasForeignKey(f => f.ParentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<UserFile>()
+            modelBuilder.Entity<Models.File>()
                 .HasOne(f => f.Folder)
                 .WithMany(f => f.Files)
-                .HasForeignKey(f => f.FolderId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<UserFile>()
-                .HasOne(f => f.User)
-                .WithMany(u => u.Files)
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(f => f.FolderId);
         }
     }
 }

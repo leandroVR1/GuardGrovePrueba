@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using GuardGroveBackend.Data;
+using GuardGroveBackend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
-// Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -14,18 +14,16 @@ builder.Services.AddCors(options =>
                           .AllowAnyHeader());
 });
 
+// Configuración de la base de datos MySQL con Entity Framework Core
+builder.Services.AddDbContext<BaseContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("MySqlConnection"),
+        Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.20-mysql")
+    ));
 
+// Registra el repositorio
+builder.Services.AddScoped<IFolderRepository, FolderRepository>();
 
-void AddCustomDbContext<TContext>(string connectionString) where TContext : DbContext
-{
-    // El contexto está configurado para utilizar MySQL como proveedor de base de datos.
-    builder.Services.AddDbContext<TContext>(options =>
-        options.UseMySql(
-            connectionString,
-            Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.20-mysql")
-        )
-    );
-}
 // Add Swagger for API documentation (optional)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,13 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
 app.UseCors("AllowAllOrigins");
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

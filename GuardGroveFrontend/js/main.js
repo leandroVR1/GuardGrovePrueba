@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fileTemplate = document.getElementById('file-template').content;
   
     // Fetch folders and files from the backend
-    fetch('https://your-backend-url/api/folders')
+    fetch('http://localhost:5293/api/folders')
       .then(response => response.json())
       .then(data => {
         // Clear existing content
