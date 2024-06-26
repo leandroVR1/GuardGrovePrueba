@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GuardGroveBackend.Data;
 using GuardGroveBackend.Repositories;
+using GuardGroveBackend.Methods;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddDbContext<BaseContext>(options =>
 
 // Registra el repositorio
 builder.Services.AddScoped<IFolderRepository, FolderRepository>();
+builder.Services.AddScoped<FolderGet>();
+
 
 // Add Swagger for API documentation (optional)
 builder.Services.AddEndpointsApiExplorer();

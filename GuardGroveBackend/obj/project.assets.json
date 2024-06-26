@@ -2776,19 +2776,19 @@
     ]
   },
   "packageFolders": {
-    "/home/riwip5-027/.nuget/packages/": {}
+    "/home/riwip5-044/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj",
+      "projectUniqueName": "/home/riwip5-044/Documents/Leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj",
       "projectName": "GuardGroveBackend",
-      "projectPath": "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj",
-      "packagesPath": "/home/riwip5-027/.nuget/packages/",
-      "outputPath": "/home/riwip5-027/Documents/leo/GuardGrovePrueba/GuardGroveBackend/obj/",
+      "projectPath": "/home/riwip5-044/Documents/Leo/GuardGrovePrueba/GuardGroveBackend/GuardGroveBackend.csproj",
+      "packagesPath": "/home/riwip5-044/.nuget/packages/",
+      "outputPath": "/home/riwip5-044/Documents/Leo/GuardGrovePrueba/GuardGroveBackend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/riwip5-027/.nuget/NuGet/NuGet.Config"
+        "/home/riwip5-044/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -2806,6 +2806,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2854,7 +2859,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.105/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/home/riwip5-044/.dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
