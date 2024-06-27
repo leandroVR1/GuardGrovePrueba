@@ -66,7 +66,7 @@ body {
   background-color: var(--primary-color);
   border-radius: 0 0 12px 12px;
   padding: 10px 0;
-  color: #fff;
+  
   
 }
 
@@ -80,6 +80,7 @@ body {
   font-weight: bold;
   font-size: 18px;
   color: #264653;
+  font-weight: bold;
   
 }
 
@@ -94,4 +95,20 @@ body {
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+#back-button {
+  background-color: #0b0e0b; 
+  color: var(--primary-color);
+  padding: 10px 20px; 
+  border: none;
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 25px; 
+  margin-right: 10px; 
+  transition: background-color 0.3s; 
+}
+
+#back-button:hover {
+  background-color: #383838; 
 }
