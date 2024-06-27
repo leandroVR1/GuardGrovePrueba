@@ -37,6 +37,21 @@ document.addEventListener("DOMContentLoaded", function () {
     data.files.forEach(file => {
       const fileElement = fileTemplate.cloneNode(true);
       fileElement.querySelector('.NombreArchivo').textContent = file.name;
+      fileElement.querySelector('.DownloadButton').setAttribute('data-file-id', file.id); // Set file id as a data attribute
+
+      // Add click event listener to the download button
+      const downloadButton = fileElement.querySelector('.DownloadButton');
+      if (downloadButton) {
+        downloadButton.addEventListener('click', (event) => {
+          event.preventDefault();
+          const fileId = downloadButton.getAttribute('data-file-id'); // Retrieve file id from data attribute
+          console.log('Descargar archivo con ID:', fileId);
+          downloadFile(fileId);
+        });
+      } else {
+        console.error('No se encontró el botón de descarga dentro de fileElement:', fileElement);
+      }
+
       mainComponent.appendChild(fileElement);
     });
 
@@ -69,6 +84,24 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch(error => {
         console.error('Error fetching folder content:', error);
+      });
+  }
+
+  // Function to download a file
+  function downloadFile(fileId) {
+    fetch(`http://localhost:5133/api/files/Download?id=${fileId}`)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `Archivo_${fileId}`); // Set the file name
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch(error => {
+        console.error('Error downloading file:', error);
       });
   }
 
