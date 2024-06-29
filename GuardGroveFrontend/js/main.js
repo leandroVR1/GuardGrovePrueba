@@ -141,6 +141,13 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Error fetching folders:', error);
       });
   }
+
+  // Logout functionality
+  const logoutButton = document.getElementById('logout-button');
+  logoutButton.addEventListener('click', () => {
+    // Clear token from localStorage
+    localStorage.removeItem('authToken');
+    // Redirect to login page
+    window.location.href = '/GuardGroveFrontend/Login.html';
+  });
 });
-
-
