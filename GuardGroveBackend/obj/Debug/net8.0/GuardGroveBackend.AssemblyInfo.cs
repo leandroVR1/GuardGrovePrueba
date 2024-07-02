@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GuardGroveBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dfe5a4959894251fa871715a431f36f78d475fa5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+52b21427d0276591a10207d95dcc669ad0ffda6d")]
 [assembly: System.Reflection.AssemblyProductAttribute("GuardGroveBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GuardGroveBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const fileTemplate = document.getElementById('file-template').content;
   const backButton = document.getElementById('back-button');
   const folderStack = []; // Stack to keep track of folder navigation
+  const createFolderForm = document.getElementById('createFolderForm');
+  const folderNameInput = document.getElementById('folderName');
+  const currentUserId = localStorage.getItem('userId'); // Obtener el userId del usuario actual
 
   // Function to render folders and files based on data
   function renderFoldersAndFiles(data) {
@@ -12,47 +15,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Render folders
     data.folders.forEach(folder => {
-      const folderElement = folderTemplate.cloneNode(true);
-      folderElement.querySelector('.NombreCarpeta').textContent = folder.name;
-      folderElement.querySelector('.Folder').setAttribute('data-folder-id', folder.id); // Set folder id as a data attribute
+      if (folder.userId == currentUserId) { // Filtrar carpetas por userId
+        const folderElement = folderTemplate.cloneNode(true);
+        folderElement.querySelector('.NombreCarpeta').textContent = folder.name;
+        folderElement.querySelector('.Folder').setAttribute('data-folder-id', folder.id); // Set folder id as a data attribute
 
-      // Add double click event listener to the folder
-      const folderAnchor = folderElement.querySelector('.Folder');
-      if (folderAnchor) {
-        folderAnchor.addEventListener('dblclick', (event) => {
-          event.preventDefault();
-          const folderId = folderAnchor.getAttribute('data-folder-id'); // Retrieve folder id from data attribute
-          console.log('Doble clic en la carpeta con ID:', folderId);
-          folderStack.push(data.currentFolder); // Add current folder to stack
-          getFolderContent(folderId);
-        });
-      } else {
-        console.error('No se encontró el elemento .Folder dentro de folderElement:', folderElement);
+        // Add double click event listener to the folder
+        const folderAnchor = folderElement.querySelector('.Folder');
+        if (folderAnchor) {
+          folderAnchor.addEventListener('dblclick', (event) => {
+            event.preventDefault();
+            const folderId = folderAnchor.getAttribute('data-folder-id'); // Retrieve folder id from data attribute
+            console.log('Doble clic en la carpeta con ID:', folderId);
+            folderStack.push(data.currentFolder); // Add current folder to stack
+            getFolderContent(folderId);
+          });
+        } else {
+          console.error('No se encontró el elemento .Folder dentro de folderElement:', folderElement);
+        }
+
+        mainComponent.appendChild(folderElement);
       }
-
-      mainComponent.appendChild(folderElement);
     });
 
     // Render files
     data.files.forEach(file => {
-      const fileElement = fileTemplate.cloneNode(true);
-      fileElement.querySelector('.NombreArchivo').textContent = file.name;
-      fileElement.querySelector('.DownloadButton').setAttribute('data-file-id', file.id); // Set file id as a data attribute
+      if (file.userId == currentUserId) { // Filtrar archivos por userId
+        const fileElement = fileTemplate.cloneNode(true);
+        fileElement.querySelector('.NombreArchivo').textContent = file.name;
+        fileElement.querySelector('.DownloadButton').setAttribute('data-file-id', file.id); // Set file id as a data attribute
 
-      // Add click event listener to the download button
-      const downloadButton = fileElement.querySelector('.DownloadButton');
-      if (downloadButton) {
-        downloadButton.addEventListener('click', (event) => {
-          event.preventDefault();
-          const fileId = downloadButton.getAttribute('data-file-id'); // Retrieve file id from data attribute
-          console.log('Descargar archivo con ID:', fileId);
-          downloadFile(fileId);
-        });
-      } else {
-        console.error('No se encontró el botón de descarga dentro de fileElement:', fileElement);
+        // Add click event listener to the download button
+        const downloadButton = fileElement.querySelector('.DownloadButton');
+        if (downloadButton) {
+          downloadButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            const fileId = downloadButton.getAttribute('data-file-id'); // Retrieve file id from data attribute
+            console.log('Descargar archivo con ID:', fileId);
+            downloadFile(fileId);
+          });
+        } else {
+          console.error('No se encontró el botón de descarga dentro de fileElement:', fileElement);
+        }
+
+        mainComponent.appendChild(fileElement);
       }
-
-      mainComponent.appendChild(fileElement);
     });
 
     // Show or hide the back button
@@ -131,22 +138,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Fetch initial folders and files from the backend
   function fetchInitialData() {
-    const initialFolderId = localStorage.getItem('currentFolderId') || 'dashboard';
-    fetch(`http://localhost:5133/api/folders/${initialFolderId}`)
-      .then(response => response.json())
-      .then(data => {
-        renderFoldersAndFiles(data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching folders:', error);
-      });
+    const initialFolderId = localStorage.getItem('currentFolderId');
+    if (initialFolderId) {
+      getFolderContent(initialFolderId);
+    } else {
+      // Set initial currentFolderId to root (1) if not set
+      localStorage.setItem('currentFolderId', 1);
+      getFolderContent(1);
+    }
   }
 
-  // Logout functionality
+  // Handle form submission for creating a new folder
+  createFolderForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const folderName = folderNameInput.value;
+    const currentFolderId = localStorage.getItem('currentFolderId') || null; // Get currentFolderId from localStorage
+
+    fetch('http://localhost:5133/api/folders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: folderName,
+        createdAt: new Date().toISOString(),
+        status: 'Active',
+        ParentFolderId: currentFolderId,
+        userId: currentUserId // Usar el userId del usuario actual
+      }),
+    })
+      .then(response => {
+        console.log('Response status:', response.status);
+        return response.json(); // Parse response as JSON
+      })
+      .then(data => {
+        console.log('Response data:', data);
+        if (data.succeded) {
+          console.log('Carpeta creada:', data.data);
+          folderNameInput.value = ''; // Clear the input
+          $('#createFolderModal').modal('hide'); // Hide the modal
+          getFolderContent(currentFolderId); // Update the content of the current folder
+        } else {
+          console.error('Error creating folder:', data.errors);
+        }
+      })
+      .catch(error => {
+        console.error('Error creating folder:', error.message);
+        console.log('Error details:', error);
+      });
+  });
+
+  // Handle logout button click
   const logoutButton = document.getElementById('logout-button');
   logoutButton.addEventListener('click', () => {
+    localStorage.removeItem('currentFolderId'); // Clear the current folder ID from localStorage
     // Clear token from localStorage
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userId')
     // Redirect to login page
     window.location.href = '/GuardGroveFrontend/Login.html';
   });
