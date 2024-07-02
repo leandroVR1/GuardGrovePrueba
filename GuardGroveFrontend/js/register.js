@@ -31,7 +31,7 @@ function register(email, password) {
         console.log('Respuesta del servidor:', data);
         if (data.succeded) {
             alert('Registro exitoso. Por favor, inicia sesión.');
-            window.location.href = '/GuardGroveFrontend/Login.html';
+            window.location.href = '/Login.html';
         } else {
             console.error('Registro fallido:', data.message);
             alert('Error en el registro: ' + (data.message || 'Error desconocido'));

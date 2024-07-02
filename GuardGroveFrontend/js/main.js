@@ -3,10 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const folderTemplate = document.getElementById('folder-template').content;
   const fileTemplate = document.getElementById('file-template').content;
   const backButton = document.getElementById('back-button');
-  const folderStack = []; // Stack to keep track of folder navigation
   const createFolderForm = document.getElementById('createFolderForm');
   const folderNameInput = document.getElementById('folderName');
   const currentUserId = localStorage.getItem('userId'); // Obtener el userId del usuario actual
+  const authToken = localStorage.getItem('authToken');
+  let folderStack = []; // Stack to keep track of folder navigation
 
   // Function to render folders and files based on data
   function renderFoldersAndFiles(data) {
@@ -67,19 +68,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Fetch initial folders and files from the backend
-  fetch('http://localhost:5133/api/folders/dashboard')
-    .then(response => response.json())
-    .then(data => {
-      console.log('Datos obtenidos del dashboard:', data);
-      renderFoldersAndFiles(data.data);
+  function fetchInitialData() {
+    fetch('http://localhost:5133/api/folders/dashboard', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
     })
-    .catch(error => {
-      console.error('Error fetching folders:', error);
-    });
+      .then(response => response.json())
+      .then(data => {
+        console.log('Datos obtenidos del dashboard:', data);
+        renderFoldersAndFiles(data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching folders:', error);
+      });
+  }
 
   // Function to fetch and display the content of a specific folder
   function getFolderContent(folderId) {
-    fetch(`http://localhost:5133/api/folders/${folderId}`)
+    fetch(`http://localhost:5133/api/folders/${folderId}`, {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
       .then(response => response.json())
       .then(folderContent => {
         console.log('Contenido de la carpeta:', folderContent);
@@ -96,7 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to download a file
   function downloadFile(fileId) {
-    fetch(`http://localhost:5133/api/files/Download?id=${fileId}`)
+    fetch(`http://localhost:5133/api/files/Download?id=${fileId}`, {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
       .then(response => response.blob())
       .then(blob => {
         const url = window.URL.createObjectURL(new Blob([blob]));
@@ -136,18 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Fetch initial folders and files from the backend
-  function fetchInitialData() {
-    const initialFolderId = localStorage.getItem('currentFolderId');
-    if (initialFolderId) {
-      getFolderContent(initialFolderId);
-    } else {
-      // Set initial currentFolderId to root (1) if not set
-      localStorage.setItem('currentFolderId', 1);
-      getFolderContent(1);
-    }
-  }
-
   // Handle form submission for creating a new folder
   createFolderForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -158,6 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
       },
       body: JSON.stringify({
         name: folderName,
@@ -194,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.removeItem('currentFolderId'); // Clear the current folder ID from localStorage
     // Clear token from localStorage
     localStorage.removeItem('authToken');
-    localStorage.removeItem('userId')
+    localStorage.removeItem('userId');
     // Redirect to login page
     window.location.href = '/GuardGroveFrontend/Login.html';
   });
