@@ -13,17 +13,79 @@ body {
   color: var(--secondary-color);
 
 }
- h1{
+header{
+  display: flex;
+  
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #161616fb;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(36, 3, 3, 0.1);
+  text-align: center;
+  margin-right: 10px;
+  margin-left: 10px;
+  border: var(--primary-color);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 10px;
+  
+
+}
+
+#logout-button{
+  float: right;
+  background-color: #0b0e0b; 
+  color: var(--primary-color);
+  padding: 10px 20px; 
+  border: none;
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 25px; 
+  margin-right: 10px; 
+  transition: background-color 0.3s;
+}
+
+ #titulo{
   font-family: var(--font-family);
-  font-size:75px;
+  font-size:50px;
   font-weight: 500;
   font-style: normal;
   color:#fff;
-  background-image: linear-gradient(45deg,var(--primary-color) 0%,#992a09 35%,#a76c51 85%,#a76c51 100%);
+  background-image: linear-gradient(45deg,var(--primary-color) 0%,#d1bc00 35%,#d3cf01 85%,#272e00 100%);
       -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
   color:#fff;
+
+
   
+  }
+  .opciones{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+
+  }
+  #crear-carpeta,#subir-archivo{
+   
+    background-color: #0b0e0b; 
+    color: var(--primary-color);
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-size: 25px; 
+    margin-right: 10px; 
+    transition: background-color 0.3s;
+   
+    border: var(--primary-color);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 10px;
+
   }
 
 .MainComponent{
@@ -110,6 +172,7 @@ body {
 }
 
 #back-button {
+  float: left;
   background-color: #0b0e0b; 
   color: var(--primary-color);
   padding: 10px 20px; 
@@ -124,3 +187,4 @@ body {
 #back-button:hover {
   background-color: #383838; 
 }
+

@@ -31,6 +31,23 @@ document.addEventListener("DOMContentLoaded", function () {
             folderStack.push(data.currentFolder); // Add current folder to stack
             getFolderContent(folderId);
           });
+
+          folderAnchor.setAttribute('draggable', true);
+
+          folderAnchor.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('text/plain', folder.id);
+          });
+
+          folderAnchor.addEventListener('dragover', (event) => {
+            event.preventDefault();
+          });
+
+          folderAnchor.addEventListener('drop', (event) => {
+            event.preventDefault();
+            const sourceFolderId = event.dataTransfer.getData('text/plain');
+            const targetFolderId = folder.id;
+            moveFolder(sourceFolderId, targetFolderId);
+          });
         } else {
           console.error('No se encontró el elemento .Folder dentro de folderElement:', folderElement);
         }
@@ -102,6 +119,52 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Error fetching folder content:', error);
       });
   }
+
+
+ // Function to move a folder
+function moveFolder(sourceFolderId, targetFolderId) {
+  fetch(`http://localhost:5133/api/folders/${sourceFolderId}`, {
+    headers: {
+      'Authorization': `Bearer ${authToken}`
+    }
+  })
+    .then(response => response.json())
+    .then(folderData => {
+      folderData.data.parentFolderId = targetFolderId;
+
+      // Validate and update folder data before sending
+      const updatedFolderData = {
+        id: folderData.data.id,
+        name: folderData.data.name,
+        createdAt: folderData.data.createdAt,
+        status: folderData.data.status,
+        parentFolderId: folderData.data.parentFolderId,
+        userId: folderData.data.userId
+      };
+
+      return fetch(`http://localhost:5133/api/folders/${sourceFolderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify(updatedFolderData)
+      });
+    })
+    .then(response => {
+      console.log('Response status:', response.status);
+      return response.json(); // Parse response as JSON
+    })
+    .then(data => {
+      console.log('Folder moved:', data);
+      const currentFolderId = localStorage.getItem('currentFolderId');
+      getFolderContent(currentFolderId);
+    })
+    .catch(error => {
+      console.error('Error moving folder:', error);
+    });
+}
+
 
   // Function to download a file
   function downloadFile(fileId) {
@@ -190,19 +253,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (data.succeded) {
           console.log('Carpeta creada:', data.data);
           folderNameInput.value = ''; // Clear the input
-          $('#createFolderModal').modal('hide'); // Hide the modal
-          getFolderContent(currentFolderId); // Update the content of the current folder
+          getFolderContent(currentFolderId); // Refresh the current folder view
         } else {
-          console.error('Error creating folder:', data.errors);
+          console.error('Error creating folder:', data.message);
         }
       })
       .catch(error => {
-        console.error('Error creating folder:', error.message);
-        console.log('Error details:', error);
+        console.error('Error creating folder:', error);
       });
   });
 
-  // Handle logout button click
   const logoutButton = document.getElementById('logout-button');
   logoutButton.addEventListener('click', () => {
     localStorage.removeItem('currentFolderId'); // Clear the current folder ID from localStorage
