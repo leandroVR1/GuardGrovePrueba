@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const authToken = localStorage.getItem('authToken');
     const currentPage = window.location.pathname;
 
-    if (!authToken && currentPage !== '/GuardGroveFrontend/Login.html') {
-        window.location.href = '/GuardGroveFrontend/Login.html';
-    } else if (authToken && currentPage === '/GuardGroveFrontend/Login.html') {
-        window.location.href = '/GuardGroveFrontend/folders.html';
+    if (!authToken && currentPage !== '/Login.html') {
+        window.location.href = '/Login.html';
+    } else if (authToken && currentPage === '/Login.html') {
+        window.location.href = '/folders.html';
     }
 
     const loginForm = document.getElementById('loginForm');
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('Error al decodificar el token:', error);
                 }
 
-                window.location.href = '/GuardGroveFrontend/folders.html';
+                window.location.href = '/folders.html';
             } else {
                 console.error('Login failed:', data.message);
                 localStorage.removeItem('authToken');
