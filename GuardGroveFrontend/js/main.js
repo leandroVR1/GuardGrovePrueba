@@ -121,7 +121,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
- // Function to move a folder
+
+// Function to move a folder
+// Function to move a folder
+// Function to move a folder
 function moveFolder(sourceFolderId, targetFolderId) {
   fetch(`http://localhost:5133/api/folders/${sourceFolderId}`, {
     headers: {
@@ -132,15 +135,17 @@ function moveFolder(sourceFolderId, targetFolderId) {
     .then(folderData => {
       folderData.data.parentFolderId = targetFolderId;
 
-      // Validate and update folder data before sending
+      // Ensure all necessary fields are included
       const updatedFolderData = {
         id: folderData.data.id,
-        name: folderData.data.name,
+        name: folderData.data.name || 'Default Folder Name', // Use a default name if name is missing
         createdAt: folderData.data.createdAt,
         status: folderData.data.status,
         parentFolderId: folderData.data.parentFolderId,
         userId: folderData.data.userId
       };
+
+      console.log('Updated folder data:', updatedFolderData);
 
       return fetch(`http://localhost:5133/api/folders/${sourceFolderId}`, {
         method: 'PUT',
@@ -153,17 +158,30 @@ function moveFolder(sourceFolderId, targetFolderId) {
     })
     .then(response => {
       console.log('Response status:', response.status);
-      return response.json(); // Parse response as JSON
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        return response.text().then(text => {
+          throw new Error(text);
+        });
+      }
     })
     .then(data => {
       console.log('Folder moved:', data);
-      const currentFolderId = localStorage.getItem('currentFolderId');
-      getFolderContent(currentFolderId);
+      if (data.errors) {
+        console.error('Validation errors:', data.errors);
+      } else {
+        const currentFolderId = localStorage.getItem('currentFolderId');
+        getFolderContent(currentFolderId);
+      }
     })
     .catch(error => {
       console.error('Error moving folder:', error);
     });
 }
+
+
+
 
 
   // Function to download a file
