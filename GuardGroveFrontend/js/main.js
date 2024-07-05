@@ -120,33 +120,52 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-
-
-// Function to move a folder
-// Function to move a folder
-// Function to move a folder
-function moveFolder(sourceFolderId, targetFolderId) {
-  fetch(`http://localhost:5133/api/folders/${sourceFolderId}`, {
-    headers: {
-      'Authorization': `Bearer ${authToken}`
-    }
-  })
-    .then(response => response.json())
+  // Function to move a folder
+  function moveFolder(sourceFolderId, targetFolderId) {
+    // Verificar si el targetFolderId existe en la base de datos
+    fetch(`http://localhost:5133/api/folders/${targetFolderId}`, {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Folder with id ${targetFolderId} does not exist.`);
+      }
+      return response.json();
+    })
+    .then(() => {
+      // Si el targetFolderId existe, proceder con la obtención de la carpeta origen
+      return fetch(`http://localhost:5133/api/folders/${sourceFolderId}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch folder with id ${sourceFolderId}`);
+      }
+      return response.json();
+    })
     .then(folderData => {
-      folderData.data.parentFolderId = targetFolderId;
-
-      // Ensure all necessary fields are included
+      console.log('Original folder data:', folderData);
+  
+      // Verifica que la estructura de datos es correcta
+      const data = folderData.data || {};
+    
+      // Verifica que todos los datos necesarios están presentes
       const updatedFolderData = {
-        id: folderData.data.id,
-        name: folderData.data.name || 'Default Folder Name', // Use a default name if name is missing
-        createdAt: folderData.data.createdAt,
-        status: folderData.data.status,
-        parentFolderId: folderData.data.parentFolderId,
-        userId: folderData.data.userId
+        id: data.id || sourceFolderId,
+        name: data.name || 'Default Folder Name', // Use a default name if name is missing
+        createdAt: data.createdAt,
+        status: data.status,
+        parentFolderId: targetFolderId,
+        userId: data.userId
       };
-
+    
       console.log('Updated folder data:', updatedFolderData);
-
+    
       return fetch(`http://localhost:5133/api/folders/${sourceFolderId}`, {
         method: 'PUT',
         headers: {
@@ -178,11 +197,10 @@ function moveFolder(sourceFolderId, targetFolderId) {
     .catch(error => {
       console.error('Error moving folder:', error);
     });
-}
-
-
-
-
+  }
+  
+  
+  
 
   // Function to download a file
   function downloadFile(fileId) {
